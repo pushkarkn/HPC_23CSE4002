@@ -1,2 +1,2 @@
-# HPC-Lab-
+# HPC 
 Repository for High Performance Computing Assignments 
