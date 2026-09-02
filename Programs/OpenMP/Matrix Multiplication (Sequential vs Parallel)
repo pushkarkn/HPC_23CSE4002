@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <omp.h>
+
+using Matrix = std::vector<std::vector<double>>;
+
+void sequential_multiply(const Matrix& A, const Matrix& B, Matrix& C, int N) {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            double sum = 0.0;
+            for (int k = 0; k < N; k++) {
+                sum += A[i][k] * B[k][j];
+            }
+            C[i][j] = sum;
+        }
+    }
+}
+
+void parallel_multiply(const Matrix& A, const Matrix& B, Matrix& C, int N) {
+    #pragma omp parallel for
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            double sum = 0.0;
+            for (int k = 0; k < N; k++) {
+                sum += A[i][k] * B[k][j];
+            }
+            C[i][j] = sum;
+        }
+    }
+}
+
+int main() {
+    const int N = 500;
+    Matrix A(N, std::vector<double>(N, 1.0));
+    Matrix B(N, std::vector<double>(N, 2.0));
+    Matrix C(N, std::vector<double>(N, 0.0));
+    
+    // Sequential
+    double t1 = omp_get_wtime();
+    sequential_multiply(A, B, C, N);
+    double t2 = omp_get_wtime();
+    std::cout << "Sequential time: " << (t2 - t1) << "s\n";
+    
+    // Parallel
+    t1 = omp_get_wtime();
+    parallel_multiply(A, B, C, N);
+    t2 = omp_get_wtime();
+    std::cout << "Parallel time:   " << (t2 - t1) << "s\n";
+    
+    // Verify a sample element (should be N * 2.0)
+    std::cout << "C[0][0] = " << C[0][0] << " (expected: " << N * 2.0 << ")\n";
+    
+    return 0;
+}
