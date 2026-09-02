@@ -1,0 +1,22 @@
+#include <iostream>
+#include <omp.h>
+
+int main() {
+    int counter = 0;
+    const int increments = 100000;
+    const int num_threads = 4;
+    
+    #pragma omp parallel num_threads(num_threads)
+    {
+        for (int i = 0; i < increments; i++) {
+            counter++;  // UNSYNCHRONIZED - Race condition!
+        }
+    }
+    
+    int expected = num_threads * increments;
+    std::cout << "Expected counter: " << expected << "\n";
+    std::cout << "Actual counter:   " << counter << "\n";
+    std::cout << "Race condition caused " << (expected - counter) << " lost increments!\n";
+    
+    return 0;
+}
