@@ -1,0 +1,20 @@
+#include <iostream>
+#include <vector>
+#include <omp.h>
+
+int main() {
+    const int N = 100;
+    std::vector<int> arr(N);
+    
+    #pragma omp parallel for
+    for (int i = 0; i < N; i++) {
+        arr[i] = i * 2;
+    }
+    
+    // Verify first and last few elements
+    std::cout << "arr[0] = " << arr[0] << "\n";
+    std::cout << "arr[50] = " << arr[50] << "\n";
+    std::cout << "arr[99] = " << arr[99] << "\n";
+    
+    return 0;
+}
