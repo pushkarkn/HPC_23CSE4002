@@ -1,0 +1,26 @@
+#include <iostream>
+#include <vector>
+#include <omp.h>
+
+int main() {
+    const int N = 1000000;
+    std::vector<double> numbers(N);
+    double sum = 0.0;
+    
+    // Initialize with sample data
+    for (int i = 0; i < N; i++) {
+        numbers[i] = i * 0.5;
+    }
+    
+    #pragma omp parallel for reduction(+:sum)
+    for (int i = 0; i < N; i++) {
+        sum += numbers[i];
+    }
+    
+    double average = sum / N;
+    
+    std::cout << "Sum: " << sum << "\n";
+    std::cout << "Average: " << average << "\n";
+    
+    return 0;
+}
