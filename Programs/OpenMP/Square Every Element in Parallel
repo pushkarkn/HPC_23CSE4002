@@ -1,0 +1,21 @@
+#include <iostream>
+#include <vector>
+#include <omp.h>
+
+int main() {
+    const int N = 10;
+    std::vector<int> input = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    std::vector<int> output(N);
+    
+    #pragma omp parallel for
+    for (int i = 0; i < N; i++) {
+        output[i] = input[i] * input[i];
+    }
+    
+    std::cout << "Input:  ";
+    for (int x : input) std::cout << x << " ";
+    std::cout << "\nOutput: ";
+    for (int x : output) std::cout << x << " ";
+    
+    return 0;
+}
